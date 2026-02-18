@@ -126,6 +126,8 @@ Rails.application.routes.draw do
 
       resources :subscribers, only: [ :index, :show ], path: "subscribers" do
         collection do
+          get "export", to: "subscribers#export", as: :export
+          post "import", to: "subscribers#import", as: :import
           get ":id", to: "subscribers#show", as: :show
           patch ":id", to: "subscribers#update", as: :update
           delete ":id", to: "subscribers#destroy", as: :destroy

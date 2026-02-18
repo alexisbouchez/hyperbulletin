@@ -1,10 +1,34 @@
 <div class="flex items-center justify-between gap-2">
   <h2 class="text-xl font-medium">Subscribers</h2>
-  <div class="hidden space-x-1">
-    <button class="font-sans text-sm btn btn-secondary">
+  <div class="space-x-1" data-controller="modal" data-action="click->modal#backdropClose">
+    <button class="font-sans text-sm btn btn-secondary" data-action="modal#open">
       Import Subscribers
     </button>
-    <button class="font-sans text-sm btn btn-secondary">Export to CSV</button>
+    <%= link_to export_subscribers_path(@newsletter.slug), class: "font-sans text-sm btn btn-secondary" do %>
+      Export to CSV
+    <% end %>
+    <dialog
+      data-modal-target="modal"
+      class="p-6 pt-5 pb-7 bg-white overflow-hidden rounded-lg shadow-with-inset min-w-sm w-96 gap-4 space-y-4"
+    >
+      <h2 class="text-xl font-medium">Import Subscribers</h2>
+      <p class="font-sans text-sm text-stone-500">
+        Upload a CSV file to import subscribers. The first row must be headers.
+        Required column: <code class="bg-stone-100 px-1 rounded">email</code>.
+        Optional: <code class="bg-stone-100 px-1 rounded">full_name</code>,
+        <code class="bg-stone-100 px-1 rounded">labels</code> (semicolon-separated).
+        Existing subscribers are skipped.
+      </p>
+      <%= form_with url: import_subscribers_path(@newsletter.slug), method: :post, multipart: true, local: true do |f| %>
+        <div class="space-y-4">
+          <%= f.file_field :file, accept: ".csv", class: "block w-full font-sans text-sm text-stone-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-sans file:bg-stone-100 file:text-stone-700 hover:file:bg-stone-200" %>
+          <div class="flex gap-2 justify-end">
+            <button type="button" class="btn btn-secondary text-sm font-sans" data-action="modal#close">Cancel</button>
+            <%= f.submit "Import", class: "btn btn-primary text-sm font-sans" %>
+          </div>
+        </div>
+      <% end %>
+    </dialog>
   </div>
 </div>
 

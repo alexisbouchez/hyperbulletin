@@ -29,10 +29,6 @@ This is beta software, you can use it in production if you're feeling like going
 - Subscriber labeling and categorization
 - Email analytics tracking (opens, clicks)
 
-### Pending features
-
-- [ ] Subscriber import & export
-
 ## Stack
 
 - Ruby on Rails

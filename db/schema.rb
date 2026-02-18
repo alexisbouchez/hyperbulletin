@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_16_083838) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_18_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -99,6 +99,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_16_083838) do
     t.bigint "newsletter_id", null: false
     t.string "public_key"
     t.string "region", default: "us-east-1"
+    t.string "resend_domain_id"
+    t.jsonb "resend_records"
     t.string "spf_status", default: "pending"
     t.string "status", default: "pending"
     t.datetime "updated_at", null: false

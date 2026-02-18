@@ -93,8 +93,6 @@ GEM
     ast (2.4.3)
     aws-eventstream (1.4.0)
     aws-partitions (1.1143.0)
-    aws-record (2.14.0)
-      aws-sdk-dynamodb (~> 1, >= 1.85.0)
     aws-sdk-core (3.229.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -103,37 +101,13 @@ GEM
       bigdecimal
       jmespath (~> 1, >= 1.6.1)
       logger
-    aws-sdk-dynamodb (1.149.0)
-      aws-sdk-core (~> 3, >= 3.228.0)
-      aws-sigv4 (~> 1.5)
     aws-sdk-kms (1.110.0)
       aws-sdk-core (~> 3, >= 3.228.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-rails (3.13.0)
-      aws-record (~> 2)
-      aws-sdk-ses (~> 1, >= 1.50.0)
-      aws-sdk-sesv2 (~> 1, >= 1.34.0)
-      aws-sdk-sqs (~> 1, >= 1.56.0)
-      aws-sessionstore-dynamodb (~> 2)
-      concurrent-ruby (>= 1.3.1)
-      railties (>= 5.2.0)
     aws-sdk-s3 (1.196.1)
       aws-sdk-core (~> 3, >= 3.228.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
-    aws-sdk-ses (1.88.0)
-      aws-sdk-core (~> 3, >= 3.228.0)
-      aws-sigv4 (~> 1.5)
-    aws-sdk-sesv2 (1.82.0)
-      aws-sdk-core (~> 3, >= 3.228.0)
-      aws-sigv4 (~> 1.5)
-    aws-sdk-sqs (1.100.0)
-      aws-sdk-core (~> 3, >= 3.228.0)
-      aws-sigv4 (~> 1.5)
-    aws-sessionstore-dynamodb (2.2.0)
-      aws-sdk-dynamodb (~> 1, >= 1.85.0)
-      rack (>= 2, < 4)
-      rack-session (>= 1, < 3)
     aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.3.0)
@@ -430,6 +404,8 @@ GEM
     regexp_parser (2.11.0)
     reline (0.6.2)
       io-console (~> 0.5)
+    resend (0.27.0)
+      httparty (>= 0.21.0)
     resolv (0.6.2)
     rexml (3.4.2)
     rorvswild (1.10.1)
@@ -572,7 +548,6 @@ DEPENDENCIES
   active_hashcash!
   acts-as-taggable-array-on
   annotaterb
-  aws-sdk-rails (~> 3)
   aws-sdk-s3
   bcrypt (~> 3.1.7)
   bootsnap
@@ -607,6 +582,7 @@ DEPENDENCIES
   puma (>= 5.0)
   rails (~> 8.1.1)
   reactionview
+  resend (~> 0.13)
   resolv
   rorvswild (>= 1.10.1)
   rspec-rails (~> 6.1.0)

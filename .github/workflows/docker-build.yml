@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag scmmishra/picoletter:${{ github.sha }} --tag scmmishra/picoletter:latest
+        run: docker build . --file Dockerfile --tag scmmishra/hyperbulletin:${{ github.sha }} --tag scmmishra/hyperbulletin:latest

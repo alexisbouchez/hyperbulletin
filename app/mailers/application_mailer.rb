@@ -5,22 +5,22 @@ class ApplicationMailer < ActionMailer::Base
   private
 
   def notify_address
-    "Picoletter Notifications <notifications@#{sending_domain}>"
+    "Hyperbulletin Notifications <notifications@#{sending_domain}>"
   end
 
   def accounts_address
-    "Picoletter Accounts <accounts@#{sending_domain}>"
+    "Hyperbulletin Accounts <accounts@#{sending_domain}>"
   end
 
   def support_address
-    "Picoletter Support <support@#{sending_domain}>"
+    "Hyperbulletin Support <support@#{sending_domain}>"
   end
 
   def alerts_address
-    "Picoletter Alerts <alerts@#{sending_domain}>"
+    "Hyperbulletin Alerts <alerts@#{sending_domain}>"
   end
 
   def sending_domain
-    AppConfig.get("PICO_SENDING_DOMAIN", "picoletter.com")
+    AppConfig.get("PICO_SENDING_DOMAIN", "hyperbulletin.com")
   end
 end

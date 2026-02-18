@@ -42,7 +42,7 @@ class SendPostBatchJob < BaseSendJob
 
   def send_email(subscriber)
     # TODO: Replace with a null SES service or Action Mailer's :test delivery method
-    return { message_id: SecureRandom.uuid } if Rails.env.development?
+    return SES::EmailService::Response.new(SecureRandom.uuid) if Rails.env.development?
 
     token = subscriber.generate_token_for(:unsubscribe)
     unsub_url = unsubscribe_url(token, newsletter.slug)
@@ -60,7 +60,7 @@ class SendPostBatchJob < BaseSendJob
       headers: {
         "List-Unsubscribe" => "<#{unsub_email}>,<#{unsub_url}>",
         "List-Unsubscribe-Post" => "List-Unsubscribe=One-Click",
-        "X-Newsletter-id" => "picoletter-#{newsletter.id}-#{post.id}-#{subscriber.id}"
+        "X-Newsletter-id" => "hyperbulletin-#{newsletter.id}-#{post.id}-#{subscriber.id}"
       }
     )
   end
@@ -70,7 +70,7 @@ class SendPostBatchJob < BaseSendJob
   end
 
   def unsubscribe_link(url)
-    "<a ses:no-track href=\"#{url}\">unsubscribe</a>"
+    "<a href=\"#{url}\">unsubscribe</a>"
   end
 
   def unsubscribe_url(token, slug)

@@ -8,7 +8,7 @@ module Embeddable
       method="post"
       target="popupwindow"
       onsubmit="window.open('#{Rails.application.config.host}/#{slug}', popupwindow)"
-      class="picoletter-form-embed"
+      class="hyperbulletin-form-embed"
     >
       #{ with_name ? "<label for=\"pico-name\">Enter your name</label>\n  <input type=\"text\" name=\"name\" id=\"pico-name\" />" : "" }
 
@@ -17,7 +17,7 @@ module Embeddable
 
       <input type="submit" value="Subscribe" />
       <p>
-        <a href="#{Rails.application.config.host}?from=#{slug}" target="_blank">Built using Picoletter.</a>
+        <a href="#{Rails.application.config.host}?from=#{slug}" target="_blank">Built using Hyperbulletin.</a>
       </p>
     </form>
     HTML
@@ -33,20 +33,20 @@ module Embeddable
       --radius: 0.4rem;
     }
 
-    .picoletter-form-embed {
+    .hyperbulletin-form-embed {
       display: flex;
       flex-direction: column;
       font-family: #{font_family};
     }
 
-    .picoletter-form-embed label {
+    .hyperbulletin-form-embed label {
       font-size: 0.875rem;
       margin-bottom: 0.5rem;
       font-weight: 600;
     }
 
-    .picoletter-form-embed input[type="text"],
-    .picoletter-form-embed input[type="email"] {
+    .hyperbulletin-form-embed input[type="text"],
+    .hyperbulletin-form-embed input[type="email"] {
       padding: 0.5rem;
       border-radius: 0.25rem;
       margin-bottom: 1rem;
@@ -54,7 +54,7 @@ module Embeddable
       border-radius: var(--radius);
     }
 
-    .picoletter-form-embed input[type="submit"] {
+    .hyperbulletin-form-embed input[type="submit"] {
       border: 1px solid var(--accent);
       background-color: var(--accent);
       color: var(--accent-lightest);
@@ -65,13 +65,13 @@ module Embeddable
       border-radius: var(--radius);
     }
 
-    .picoletter-form-embed input[type="submit"]:hover {
+    .hyperbulletin-form-embed input[type="submit"]:hover {
       background-color: var(--accent-dark);
       border-color: var(--accent-dark);
       cursor: pointer;
     }
 
-    .picoletter-form-embed p {
+    .hyperbulletin-form-embed p {
       margin-block-start: 0px;
       margin-block-end: 0px;
       font-size: 0.75rem;
@@ -83,7 +83,7 @@ module Embeddable
 
   def codepen_payload
     payload = {
-      "title" => "#{title} - Picoletter Embed Form",
+      "title" => "#{title} - Hyperbulletin Embed Form",
       "private" => true,
       "html" => embed_form(with_name: true),
       "css" => embed_form_css

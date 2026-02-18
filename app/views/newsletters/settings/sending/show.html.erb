@@ -3,7 +3,7 @@
 <div class="space-y-8">
   <% if @newsletter.sending_domain.blank? %>
     <%# No domain connected — show connect form %>
-    <%= render "newsletters/settings/partials/settings_section", title: "Connect Domain", subtitle: "Connect a custom sending domain to improve deliverability. You can also use the default domain mail.picoletter.com." do %>
+    <%= render "newsletters/settings/partials/settings_section", title: "Connect Domain", subtitle: "Connect a custom sending domain to improve deliverability. You can also use the default domain mail.hyperbulletin.com." do %>
       <%= form_with url: settings_sending_connect_domain_path(slug: @newsletter.slug), method: :post do |form| %>
         <div class="max-w-lg space-y-4">
           <div>
@@ -25,7 +25,7 @@
       <%= labeled_form_with model: @newsletter, url: settings_sending_path(slug: @newsletter.slug), method: :patch, permission: :sending do |form| %>
         <div class="max-w-lg space-y-4">
           <%= form.text_field :sending_name,
-                          placeholder: "Shivam from Picoletter",
+                          placeholder: "Shivam from Hyperbulletin",
                           label: "Sending Name" %>
 
           <div class="space-y-1">
@@ -39,7 +39,7 @@
           </div>
 
           <%= form.text_field :reply_to,
-                          placeholder: "hey@picoletter.com",
+                          placeholder: "hey@hyperbulletin.com",
                           hint: "Optional. If set, replies from subscribers will go to this address instead of the sending address.",
                           label: "Reply To" %>
         </div>
@@ -57,7 +57,7 @@
           <%= button_to settings_sending_disconnect_domain_path(slug: @newsletter.slug),
               method: :delete,
               class: "btn btn-outline text-red-600 hover:bg-red-50 hover:text-red-700 border-red-200 hover:border-red-300",
-              data: { turbo_confirm: "Are you sure you want to disconnect this domain? Your newsletter will revert to using the default picoletter.com sending address.", turbo_confirm_text: @newsletter.sending_domain.name } do %>
+              data: { turbo_confirm: "Are you sure you want to disconnect this domain? Your newsletter will revert to using the default hyperbulletin.com sending address.", turbo_confirm_text: @newsletter.sending_domain.name } do %>
             Disconnect Domain
           <% end %>
         </div>
@@ -77,7 +77,7 @@
           <%= button_to settings_sending_disconnect_domain_path(slug: @newsletter.slug),
               method: :delete,
               class: "btn btn-outline text-red-600 hover:bg-red-50 hover:text-red-700 border-red-200 hover:border-red-300",
-              data: { turbo_confirm: "Are you sure you want to disconnect this domain? Your newsletter will revert to using the default picoletter.com sending address.", turbo_confirm_text: @newsletter.sending_domain.name } do %>
+              data: { turbo_confirm: "Are you sure you want to disconnect this domain? Your newsletter will revert to using the default hyperbulletin.com sending address.", turbo_confirm_text: @newsletter.sending_domain.name } do %>
             Disconnect Domain
           <% end %>
         </div>

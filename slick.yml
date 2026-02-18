@@ -1,6 +1,6 @@
 app:
-  name: "picoletter"
-  image: "scmmishra/picoletter"
+  name: "hyperbulletin"
+  image: "scmmishra/hyperbulletin"
   container_port: 3000
   env:
     - SECRET_KEY_BASE
@@ -19,7 +19,7 @@ app:
 caddy:
   admin_api: "http://localhost:2019"
   rules:
-    - match: "picoletter.com"
+    - match: "hyperbulletin.com"
       reverse_proxy:
         - path: ""
           to: "http://localhost:{port}"

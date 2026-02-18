@@ -6,7 +6,7 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module PicoLetter
+module Hyperbulletin
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
@@ -38,7 +38,7 @@ module PicoLetter
 
     # pico config
     config.host = ENV.fetch("PICO_HOST", "http://localhost:3000")
-    config.support_email = ENV.fetch("PICO_SUPPORT_EMAIL", "support@picoletter.com")
+    config.support_email = ENV.fetch("PICO_SUPPORT_EMAIL", "support@hyperbulletin.com")
     if ENV.fetch("BETTERSTACK__LOGS_TOKEN", nil)
       config.logger = Logtail::Logger.create_default_logger(ENV.fetch("BETTERSTACK__LOGS_TOKEN", nil))
     end

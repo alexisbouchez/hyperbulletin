@@ -1,6 +1,8 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  host: <%= ENV.fetch("POSTGRES_HOST", "localhost") %>
+  username: <%= ENV.fetch("POSTGRES_USER", "postgres") %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 queue: &queue
@@ -14,36 +16,36 @@ cache: &cache
 development:
   primary:
     <<: *default
-    database: picoletter_development
+    database: hyperbulletin_development
   queue:
     <<: *queue
-    database: picoletter_development_queue
+    database: hyperbulletin_development_queue
   cache:
     <<: *cache
-    database: picoletter_development_cache
+    database: hyperbulletin_development_cache
 
 test:
   primary:
     <<: *default
-    database: picoletter_test
+    database: hyperbulletin_test
   queue:
     <<: *queue
-    database: picoletter_test_queue
+    database: hyperbulletin_test_queue
   cache:
     <<: *cache
-    database: picoletter_test_cache
+    database: hyperbulletin_test_cache
 
 production:
   primary:
     <<: *default
-    database: picoletter_production
-    username: picoletter
+    database: hyperbulletin_production
+    username: hyperbulletin
     url: <%= ENV['DATABASE_URL'] %>
   queue:
     <<: *queue
-    database: picoletter_production_queue
+    database: hyperbulletin_production_queue
     url: <%= ENV['QUEUE_DATABASE_URL'] %>
   cache:
     <<: *cache
-    database: picoletter_production_cache
+    database: hyperbulletin_production_cache
     url: <%= ENV['CACHE_DATABASE_URL'] %>

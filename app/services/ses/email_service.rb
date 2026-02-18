@@ -1,5 +1,7 @@
-class SES::EmailService < BaseAwsService
-  # Send an email using Amazon SES
+class SES::EmailService
+  Response = Struct.new(:message_id)
+
+  # Send an email using Resend
   #
   # @param [Hash] params Email parameters
   # @option params [Array<String>] :to Recipient email addresses
@@ -10,48 +12,23 @@ class SES::EmailService < BaseAwsService
   # @option params [String] :text Plain text email content
   # @option params [Hash<String, String>] :headers Additional email headers
   #
-  # @return [AWS::SES::Types::SendEmailResponse] Response from SES API
-  #
-  # @example Basic usage
-  #   email_service.send(
-  #     to: ['user@example.com'],
-  #     from: 'sender@example.com',
-  #     reply_to: 'reply@example.com',
-  #     subject: 'Hello',
-  #     html: '<p>HTML content</p>',
-  #     text: 'Text content',
-  #     headers: {'List-Unsubscribe' => '<url>'}
-  #   )
+  # @return [Response] Response object with message_id
   def send(params)
-    payload = build_email_payload(params)
-
-    @ses_client.send_email(payload)
+    response = Resend::Emails.send(build_email_payload(params))
+    Response.new(response[:id])
   end
 
   private
 
   def build_email_payload(params)
-    parsed_headers = params.fetch(:headers, {}).map { |key, value| { name: key, value: value } }
-
     {
-      from_email_address: params[:from],
-      destination: { to_addresses: params[:to] },
-      reply_to_addresses: [ params[:reply_to] ],
-      content: {
-        simple: {
-          subject: { data: params[:subject] },
-          body: {
-            text: { data: params[:text] },
-            html: { data: params[:html] }
-          },
-          headers: parsed_headers
-        }
-      },
-      configuration_set_name: configuration_set
-    }
-  end
-
-  def configuration_set
-    @configuration_set ||= AppConfig.get("AWS_SES_CONFIGURATION_SET")
+      from: params[:from],
+      to: params[:to],
+      reply_to: params[:reply_to],
+      subject: params[:subject],
+      html: params[:html],
+      text: params[:text],
+      headers: params.fetch(:headers, {})
+    }.compact
   end
 end

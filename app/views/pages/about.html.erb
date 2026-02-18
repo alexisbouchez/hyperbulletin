@@ -1,0 +1,44 @@
+<% content_for :title, "About" %>
+
+<section class="mx-auto px-5 sm:px-0 max-w-xl my-12">
+  <h1 class="text-3xl text-balance font-serif font-medium text-stone-800 mb-8">
+    Hey there!
+  </h1>
+
+  <div class="space-y-5 text-stone-600 leading-relaxed">
+    <p>
+      Ever since we started writing, we've been looking for a way to share our thoughts with the world, but found nothing that was simple — as simple as email.
+    </p>
+    <p>
+      Email was the perfect medium for us — it's simple, it's personal, and it's open — as open as the internet.
+    </p>
+    <p>
+      Tools today are bloated with 'features,' paywalls, complicated workflows. What we needed was something that got out of the way and let us put our word out without any hassle.
+    </p>
+    <p>
+      Hyperbulletin was born out of this need — for the love of sharing.
+    </p>
+    <p>
+      We've made Hyperbulletin open source, and permissively licensed it, so that you can use it as you like.
+    </p>
+    <p>
+      We hope you enjoy using Hyperbulletin.
+    </p>
+  </div>
+
+  <p class="mt-10 text-stone-600">
+    Gratefully,<br>
+    <span class="font-medium text-stone-800">Hyperbulletin team</span>
+  </p>
+</section>
+
+<section class="mx-auto px-5 sm:px-0 max-w-xl my-12 border-t border-stone-200 pt-10">
+  <h2 class="text-xl font-serif font-medium text-stone-800 mb-2">As simple as e-mail</h2>
+  <p class="text-stone-600 mb-5">
+    Sending newsletters should be as easy as sending an email.
+  </p>
+  <%= link_to signup_path,
+    class: "bg-gradient-to-t inline-flex items-center gap-2 from-stone-900 outline outline-1 outline-stone-600 to-stone-700 text-sm shadow-sm px-6 py-2 text-white rounded-xl" do %>
+    Start publishing
+  <% end %>
+</section>

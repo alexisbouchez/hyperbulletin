@@ -2,18 +2,20 @@
 #
 # Table name: domains
 #
-#  id            :bigint           not null, primary key
-#  dkim_status   :string           default("pending")
-#  dmarc_added   :boolean          default(FALSE)
-#  error_message :string
-#  name          :string
-#  public_key    :string
-#  region        :string           default("us-east-1")
-#  spf_status    :string           default("pending")
-#  status        :string           default("pending")
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  newsletter_id :bigint           not null
+#  id               :bigint           not null, primary key
+#  dkim_status      :string           default("pending")
+#  dmarc_added      :boolean          default(FALSE)
+#  error_message    :string
+#  name             :string
+#  public_key       :string
+#  region           :string           default("us-east-1")
+#  resend_records   :jsonb
+#  spf_status       :string           default("pending")
+#  status           :string           default("pending")
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  newsletter_id    :bigint           not null
+#  resend_domain_id :string
 #
 # Indexes
 #
@@ -41,13 +43,19 @@ class Domain < ApplicationRecord
   end
 
   def register
-    public_key = ses_service.create_identity
-    update(public_key: public_key, region: ses_service.region)
+    response = ses_service.create_identity
+    dkim_record = response[:records]&.find { |r| r[:record] == "DKIM" }
+    update(
+      resend_domain_id: response[:id],
+      resend_records: response[:records],
+      region: response[:region],
+      public_key: dkim_record&.dig(:value)
+    )
     sync_attributes
   end
 
   def register_or_sync
-    if public_key.nil?
+    if resend_domain_id.nil?
       register
     else
       sync_attributes
@@ -76,14 +84,25 @@ class Domain < ApplicationRecord
 
   def sync_attributes
     identity = ses_service.get_identity
+    dkim_record = identity[:records]&.find { |r| r[:record] == "DKIM" }
+    spf_record = identity[:records]&.find { |r| r[:record] == "SPF" && r[:type] == "TXT" }
     update(
-      dkim_status: identity.dkim_attributes.status.downcase,
-      spf_status: identity.mail_from_attributes.mail_from_domain_status.downcase,
-      status: identity.verification_status.downcase
+      resend_records: identity[:records],
+      dkim_status: map_resend_status(dkim_record&.dig(:status)),
+      spf_status: map_resend_status(spf_record&.dig(:status)),
+      status: map_resend_status(identity[:status])
     )
   end
 
+  def map_resend_status(resend_status)
+    case resend_status
+    when "verified" then "success"
+    when "not_started", nil then "pending"
+    else resend_status
+    end
+  end
+
   def ses_service
-    @ses_service ||= SES::DomainService.new(name)
+    @ses_service ||= SES::DomainService.new(name, resend_domain_id: resend_domain_id)
   end
 end

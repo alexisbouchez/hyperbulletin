@@ -60,7 +60,7 @@ class SendSubscriberReminderJob < ApplicationJob
       html: html_content,
       text: text_content,
       headers: {
-        "X-Newsletter-id" => "picoletter-reminder-#{@newsletter.id}-#{@subscriber.id}"
+        "X-Newsletter-id" => "hyperbulletin-reminder-#{@newsletter.id}-#{@subscriber.id}"
       }
     )
   end

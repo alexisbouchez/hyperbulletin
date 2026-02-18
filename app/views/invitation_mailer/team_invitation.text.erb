@@ -2,7 +2,7 @@ Hi there,
 
 <% role = @invitation.role.to_s %>
 <% article = role.present? && role[0].match?(/[aeiou]/i) ? 'an' : 'a' %>
-<%= @invited_by.name %> has invited you to join <%= @newsletter.title %> as <%= article %> <%= role %> on Picoletter.
+<%= @invited_by.name %> has invited you to join <%= @newsletter.title %> as <%= article %> <%= role %> on Hyperbulletin.
 
 To accept this invitation, visit:
 <%= @accept_url %>

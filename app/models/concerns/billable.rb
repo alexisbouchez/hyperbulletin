@@ -65,7 +65,7 @@ module Billable
     if Rails.env.development?
       "http://localhost:8787"
     else
-      "https://billing.picoletter.com"
+      "https://billing.hyperbulletin.com"
     end
   end
 

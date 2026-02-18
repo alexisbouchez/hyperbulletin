@@ -20,6 +20,7 @@ class UsersController < ApplicationController
 
   def resend_verification_email
     Current.user.send_verification_email
+    session[:verification_email_sent_at] = Time.current.to_i
     redirect_to verify_path, notice: "Verification email resent."
   end
 
@@ -27,8 +28,9 @@ class UsersController < ApplicationController
     return redirect_to_newsletter_home if Current.user.verified?
 
     @provider = EmailInformationService.new(Current.user.email)
-    sending_domain = AppConfig.get("PICO_SENDING_DOMAIN", "picoletter.com")
+    sending_domain = AppConfig.get("PICO_SENDING_DOMAIN", "hyperbulletin.com")
     @search_url = @provider.search_url(sender: "accounts@#{sending_domain}") if @provider.name.present?
+    @last_sent_at = session[:verification_email_sent_at].to_i
 
     render :verify
   end
@@ -55,6 +57,7 @@ class UsersController < ApplicationController
       return redirect_to_newsletter_home if @user.verified?
 
       @user.send_verification_email_once
+      session[:verification_email_sent_at] = Time.current.to_i
       redirect_to verify_path
     else
       redirect_to signup_path, notice: error_messages_for(@user.errors)

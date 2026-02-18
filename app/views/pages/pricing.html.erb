@@ -1,0 +1,101 @@
+<% content_for :title, "Pricing" %>
+
+<section class="mx-auto px-5 sm:px-0 max-w-xl my-12">
+  <h1 class="text-3xl text-balance font-serif font-medium text-stone-800">
+    Simple, sustainable and affordable pricing
+  </h1>
+  <p class="mt-3 text-stone-600 text-balance">
+    Our pricing is simple, you pay for the number of emails you send, with no bar on the number of subscribers. There's just one plan that starts at $5 with 3,000 emails included.
+  </p>
+  <p class="mt-2 text-stone-600 text-balance">
+    We are not VC funded, we don't need to grow at blitz scale. This pricing ensures we can provide the best service to you regardless of how much you pay us.
+  </p>
+</section>
+
+<%# Pricing card %>
+<section class="mx-auto px-5 sm:px-0 max-w-xl my-12">
+  <div class="bg-white rounded-xl shadow-with-inset p-6">
+    <div class="flex items-baseline gap-1 mb-1">
+      <span class="text-4xl font-serif font-medium text-stone-800">$5</span>
+      <span class="text-stone-500 text-sm">/ month</span>
+    </div>
+    <p class="text-stone-500 text-sm mb-5">Includes 3,000 emails · Unlimited subscribers</p>
+
+    <%= link_to "Get started", signup_path,
+      class: "bg-gradient-to-t text-center inline-flex items-center gap-2 justify-around from-stone-900 outline outline-1 outline-stone-600 to-stone-700 text-sm shadow-sm px-6 py-2 text-white rounded-xl mb-6" %>
+
+    <div class="border-t border-stone-100 pt-5 space-y-2.5">
+      <% [
+        "3,000 emails included",
+        "Unlimited subscribers",
+        "Multiple newsletters",
+        "Tagging & Segmentation",
+        "Custom domains",
+        "Email scheduling",
+        "Simple reporting"
+      ].each do |feature| %>
+        <div class="flex items-center gap-2.5 text-sm text-stone-700">
+          <svg class="size-4 text-stone-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+          <%= feature %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <p class="mt-4 text-xs text-stone-500 text-center">
+    Additional emails billed at $0.0005/email — $5 per 10,000 additional emails.
+  </p>
+</section>
+
+<%# FAQ %>
+<section class="mx-auto px-5 sm:px-0 max-w-xl my-12">
+  <h2 class="text-xl font-serif font-medium text-stone-800 mb-6">Frequently asked questions</h2>
+
+  <div class="space-y-0 divide-y divide-stone-200">
+    <% [
+      {
+        q: "What payment methods do you accept?",
+        a: "We accept all major credit and debit cards via Stripe."
+      },
+      {
+        q: "Why do you not have a subscriber-based pricing model?",
+        a: "Subscriber-based pricing penalizes you for growing your audience. We think that's backwards — you should only pay for the emails you actually send."
+      },
+      {
+        q: "Do you have a free plan?",
+        a: "We don't currently offer a free plan, but our paid plan starts at just $5/month which covers most small newsletter needs."
+      },
+      {
+        q: "Do you offer discounts?",
+        a: "We don't currently offer discounts, but our pricing is already as low as we can sustainably go."
+      },
+      {
+        q: "Can I get a refund?",
+        a: "Yes — reach out to us and we'll sort it out."
+      },
+      {
+        q: "How is your offering so cheap?",
+        a: "We keep our costs low by staying focused. No bloated features, no excessive infrastructure, no investor expectations to meet."
+      },
+      {
+        q: "What happens if I don't send any emails in a billing cycle?",
+        a: "You still pay the $5 base fee. Think of it as keeping your account and subscriber list active."
+      },
+      {
+        q: "Is there a limit on subscribers?",
+        a: "No. Grow your audience without any limits or penalties."
+      },
+      {
+        q: "Is there a limit on emails?",
+        a: "No hard limit — you just pay for what you send beyond the 3,000 included in your plan."
+      }
+    ].each do |item| %>
+      <div class="py-5">
+        <h3 class="font-medium text-stone-800 mb-1.5"><%= item[:q] %></h3>
+        <p class="text-sm text-stone-600 leading-relaxed"><%= item[:a] %></p>
+      </div>
+    <% end %>
+  </div>
+</section>

@@ -5,7 +5,7 @@ RSpec.describe SendSubscriberReminderJob, type: :job do
   let(:newsletter) { create(:newsletter, user: user) }
   let(:subscriber) { create(:subscriber, newsletter: newsletter, status: :unverified) }
   let(:ses_service) { instance_double(SES::EmailService) }
-  let(:ses_response) { Struct.new(:message_id).new("ses-message-id-123") }
+  let(:ses_response) { SES::EmailService::Response.new("ses-message-id-123") }
 
   before do
     allow(SES::EmailService).to receive(:new).and_return(ses_service)

@@ -124,7 +124,7 @@ gem "valid_email2"
 gem "cloudflare-rails"
 
 # to parse maxmind db
-gem "aws-sdk-rails", "~> 3"
+gem "resend", "~> 0.13"
 
 # Bot prevention
 gem "active_hashcash", github: "BaseSecrete/active_hashcash"

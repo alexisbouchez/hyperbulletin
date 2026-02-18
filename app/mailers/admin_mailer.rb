@@ -17,7 +17,7 @@ class AdminMailer < ApplicationMailer
     end
     mail(
       to: admin_emails,
-      subject: "[Picoletter Alert] #{@stuck_count} stuck post(s) detected",
+      subject: "[Hyperbulletin Alert] #{@stuck_count} stuck post(s) detected",
       from: alerts_address
     )
   end

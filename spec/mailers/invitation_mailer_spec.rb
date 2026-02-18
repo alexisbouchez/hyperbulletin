@@ -25,7 +25,7 @@ RSpec.describe InvitationMailer, type: :mailer do
 
     it "renders the headers" do
       expect(mail.to).to eq(["invitee@example.com"])
-      expect(mail.from).to eq(["accounts@#{AppConfig.get("PICO_SENDING_DOMAIN", "picoletter.com")}"])
+      expect(mail.from).to eq(["accounts@#{AppConfig.get("PICO_SENDING_DOMAIN", "hyperbulletin.com")}"])
       expect(mail.subject).to eq("You've been invited to join Dev Digest")
     end
 

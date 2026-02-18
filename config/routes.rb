@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
   default_url_options host: Rails.application.config.host
 
+  # Marketing pages
+  root "pages#home"
+  get "/pricing", to: "pages#pricing", as: :pricing
+  get "/updates", to: "pages#updates", as: :updates
+  get "/about", to: "pages#about", as: :about
+  get "/policy/privacy", to: "pages#privacy", as: :policy_privacy
+
   mount MissionControl::Jobs::Engine, at: "/admin/jobs"
   mount ActiveHashcash::Engine, at: "/admin/hashcash"
 

@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Picoletter API
+  title: Hyperbulletin API
   version: v1
-  description: API for managing Picoletter newsletter resources.
+  description: API for managing Hyperbulletin newsletter resources.
 
 servers:
   - url: /api/v1

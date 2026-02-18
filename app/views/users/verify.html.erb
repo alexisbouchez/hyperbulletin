@@ -11,7 +11,7 @@
   <h1 class="text-3xl leading-10 text-stone-900">Please verify your email</h1>
 
   <p class="mt-2 text-xl text-stone-600">
-    Thank you for signing up for Picoletter. We've sent a confirmation email to
+    Thank you for signing up for Hyperbulletin. We've sent a confirmation email to
     <span class="font-medium text-stone-900"><%= Current.user.email %></span>
   </p>
 
@@ -378,15 +378,18 @@
   <hr class="my-5">
 
   <div class="space-y-2">
-    <p class="font-sans text-sm text-stone-400 mt-5 text-left">
-      If you haven't received your verification email yet,
-      <%= link_to "click here to resend it.",
-      resend_verification_email_path,
-      class: "hover:underline",
-      data: {
-        turbo_method: :post,
-      } %>
-    </p>
+    <div
+      class="mt-5"
+      data-controller="resend"
+      data-resend-sent-at-value="<%= @last_sent_at %>"
+    >
+      <%= button_to resend_verification_email_path,
+        method: :post,
+        data: { resend_target: "button" },
+        class: "btn btn-secondary font-sans text-sm disabled:opacity-40 disabled:cursor-not-allowed" do %>
+        Resend email <span class="ml-1 tabular-nums text-stone-400" data-resend-target="countdown"></span>
+      <% end %>
+    </div>
     <div class="font-sans text-sm text-stone-400 mt-5 text-left">
       You are logged in as
       <%= Current.user.email %>

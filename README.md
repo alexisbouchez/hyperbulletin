@@ -1,6 +1,6 @@
-# Picoletter
+# Hyperbulletin
 
-Picoletter is a newsletter app for independent bloggers and writers. It uses SES to send emails. With their really generous free tier, you could run your newsletter on a $5 VM on DigitalOcean or Hetzner virtually for free.
+Hyperbulletin is a newsletter app for independent bloggers and writers. It uses SES to send emails. With their really generous free tier, you could run your newsletter on a $5 VM on DigitalOcean or Hetzner virtually for free.
 
 ![compose](.github/screenshots/compose.webp)
 

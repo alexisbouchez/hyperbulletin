@@ -2,18 +2,20 @@
 #
 # Table name: domains
 #
-#  id            :bigint           not null, primary key
-#  dkim_status   :string           default("pending")
-#  dmarc_added   :boolean          default(FALSE)
-#  error_message :string
-#  name          :string
-#  public_key    :string
-#  region        :string           default("us-east-1")
-#  spf_status    :string           default("pending")
-#  status        :string           default("pending")
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  newsletter_id :bigint           not null
+#  id               :bigint           not null, primary key
+#  dkim_status      :string           default("pending")
+#  dmarc_added      :boolean          default(FALSE)
+#  error_message    :string
+#  name             :string
+#  public_key       :string
+#  region           :string           default("us-east-1")
+#  resend_records   :jsonb
+#  spf_status       :string           default("pending")
+#  status           :string           default("pending")
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  newsletter_id    :bigint           not null
+#  resend_domain_id :string
 #
 # Indexes
 #

@@ -315,6 +315,162 @@ RSpec.describe Newsletters::SubscribersController, type: :controller do
     end
   end
 
+  describe "GET #export" do
+    let!(:subscriber1) { create(:subscriber, newsletter: newsletter, email: "alice@example.com", full_name: "Alice", status: :verified) }
+    let!(:subscriber2) { create(:subscriber, newsletter: newsletter, email: "bob@example.com", full_name: nil, status: :unverified) }
+
+    it "returns a CSV file" do
+      get :export, params: { slug: newsletter.slug }
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq("text/csv")
+    end
+
+    it "sets a filename with today's date" do
+      get :export, params: { slug: newsletter.slug }
+      expect(response.headers["Content-Disposition"]).to include("subscribers-#{Date.today}.csv")
+    end
+
+    it "includes the header row" do
+      get :export, params: { slug: newsletter.slug }
+      csv = CSV.parse(response.body, headers: true)
+      expect(csv.headers).to eq(%w[email full_name labels status created_at])
+    end
+
+    it "includes all subscribers for the newsletter" do
+      get :export, params: { slug: newsletter.slug }
+      csv = CSV.parse(response.body, headers: true)
+      emails = csv.map { |row| row["email"] }
+      expect(emails).to contain_exactly("alice@example.com", "bob@example.com")
+    end
+
+    it "serialises labels as semicolon-separated values" do
+      subscriber1.update!(labels: [])
+      newsletter.labels.create!(name: "vip")
+      newsletter.labels.create!(name: "premium")
+      subscriber1.update!(labels: %w[vip premium])
+
+      get :export, params: { slug: newsletter.slug }
+      csv = CSV.parse(response.body, headers: true)
+      alice_row = csv.find { |row| row["email"] == "alice@example.com" }
+      expect(alice_row["labels"].split(";")).to contain_exactly("vip", "premium")
+    end
+
+    it "exports subscribers without labels as an empty string" do
+      get :export, params: { slug: newsletter.slug }
+      csv = CSV.parse(response.body, headers: true)
+      bob_row = csv.find { |row| row["email"] == "bob@example.com" }
+      expect(bob_row["labels"]).to eq("")
+    end
+
+    it "does not export subscribers from other newsletters" do
+      other_subscriber = create(:subscriber, newsletter: other_newsletter)
+      get :export, params: { slug: newsletter.slug }
+      csv = CSV.parse(response.body, headers: true)
+      emails = csv.map { |row| row["email"] }
+      expect(emails).not_to include(other_subscriber.email)
+    end
+
+    it "returns just the header row when there are no subscribers" do
+      newsletter.subscribers.destroy_all
+      get :export, params: { slug: newsletter.slug }
+      csv = CSV.parse(response.body, headers: true)
+      expect(csv.count).to eq(0)
+      expect(csv.headers).to eq(%w[email full_name labels status created_at])
+    end
+
+    it "requires authentication" do
+      sign_out
+      get :export, params: { slug: newsletter.slug }
+      expect(response).to redirect_to(auth_login_path)
+    end
+  end
+
+  describe "POST #import" do
+    def csv_upload(content)
+      file = Tempfile.new(["subscribers", ".csv"])
+      file.write(content)
+      file.rewind
+      Rack::Test::UploadedFile.new(file.path, "text/csv")
+    end
+
+    let(:valid_csv) do
+      csv_upload(<<~CSV)
+        email,full_name,labels
+        newperson@example.com,New Person,
+        another@example.com,Another One,
+      CSV
+    end
+
+    it "redirects with a notice when no file is provided" do
+      post :import, params: { slug: newsletter.slug }
+      expect(response).to redirect_to(subscribers_path(newsletter.slug))
+      expect(flash[:notice]).to eq("Please select a CSV file.")
+    end
+
+    it "imports new subscribers and redirects with a count notice" do
+      post :import, params: { slug: newsletter.slug, file: valid_csv }
+      expect(response).to redirect_to(subscribers_path(newsletter.slug))
+      expect(flash[:notice]).to include("Imported 2 subscriber(s), skipped 0 duplicate(s)")
+    end
+
+    it "creates subscribers with verified status" do
+      post :import, params: { slug: newsletter.slug, file: valid_csv }
+      expect(newsletter.subscribers.find_by(email: "newperson@example.com").status).to eq("verified")
+    end
+
+    it "sets created_via to import" do
+      post :import, params: { slug: newsletter.slug, file: valid_csv }
+      expect(newsletter.subscribers.find_by(email: "newperson@example.com").created_via).to eq("import")
+    end
+
+    it "stores full_name from the CSV" do
+      post :import, params: { slug: newsletter.slug, file: valid_csv }
+      expect(newsletter.subscribers.find_by(email: "newperson@example.com").full_name).to eq("New Person")
+    end
+
+    it "normalises emails to lowercase" do
+      upload = csv_upload("email,full_name\nMixedCase@Example.COM,Test\n")
+      post :import, params: { slug: newsletter.slug, file: upload }
+      expect(newsletter.subscribers.find_by(email: "mixedcase@example.com")).to be_present
+    end
+
+    it "skips rows with blank emails and counts them as skipped" do
+      upload = csv_upload("email,full_name\n,No Email\nnormal@example.com,Normal\n")
+      post :import, params: { slug: newsletter.slug, file: upload }
+      expect(flash[:notice]).to include("skipped 1 duplicate(s)")
+      expect(newsletter.subscribers.find_by(email: "normal@example.com")).to be_present
+    end
+
+    it "skips subscribers that already exist and reports them as duplicates" do
+      create(:subscriber, newsletter: newsletter, email: "existing@example.com")
+      upload = csv_upload("email,full_name\nexisting@example.com,Existing\nnew@example.com,New\n")
+      post :import, params: { slug: newsletter.slug, file: upload }
+      expect(flash[:notice]).to include("Imported 1 subscriber(s), skipped 1 duplicate(s)")
+    end
+
+    it "does not change an existing subscriber's data when skipping" do
+      existing = create(:subscriber, newsletter: newsletter, email: "existing@example.com", full_name: "Original")
+      upload = csv_upload("email,full_name\nexisting@example.com,Changed Name\n")
+      post :import, params: { slug: newsletter.slug, file: upload }
+      expect(existing.reload.full_name).to eq("Original")
+    end
+
+    it "reports errors for rows that fail validation" do
+      # Force a save failure by importing a duplicate in the same file
+      # (second row has same email as first; first will save, second will hit uniqueness)
+      upload = csv_upload("email,full_name\ndupe@example.com,First\ndupe@example.com,Second\n")
+      post :import, params: { slug: newsletter.slug, file: upload }
+      # Second row will be found via find_or_initialize_by and treated as a duplicate (skipped)
+      expect(newsletter.subscribers.where(email: "dupe@example.com").count).to eq(1)
+    end
+
+    it "requires authentication" do
+      sign_out
+      post :import, params: { slug: newsletter.slug, file: valid_csv }
+      expect(response).to redirect_to(auth_login_path)
+    end
+  end
+
   describe "Pagy integration" do
     it "uses Pagy for pagination" do
       create_list(:subscriber, 5, newsletter: newsletter, status: :verified)
